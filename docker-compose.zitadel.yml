@@ -82,7 +82,9 @@ services:
 
   us:
     container_name: datalens-us
-    image: ghcr.io/datalens-tech/datalens-us:0.224.0
+    build:
+      context: ./datalens-us
+      dockerfile: Dockerfile
     depends_on:
       - pg-us
     environment:
@@ -101,6 +103,9 @@ services:
       CLIENT_SECRET: "${DL_CLIENT_SECRET}"
       SERVICE_CLIENT_ID: "us"
       SERVICE_CLIENT_SECRET: "${US_SERVICE_CLIENT_SECRET}"
+
+      AUTH_TYPE: "zitadel"
+
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
@@ -160,7 +165,9 @@ services:
 
   datalens:
     container_name: datalens-ui
-    image: ghcr.io/datalens-tech/datalens-ui:0.1906.0
+    build:
+      context: ./aist_datalens_ui
+      dockerfile: Dockerfile
     ports:
       - ${UI_PORT:-8080}:8080
     depends_on:
@@ -179,7 +186,6 @@ services:
       NODE_EXTRA_CA_CERTS: "/usr/local/share/ca-certificates/cert.pem"
       HC: ${HC:-0}
 
-      ZITADEL: "true"
       CLIENT_ID: "${DL_CLIENT_ID}"
       CLIENT_SECRET: "${DL_CLIENT_SECRET}"
       ZITADEL_PROJECT_ID: "${ZITADEL_PROJECT_ID}"
@@ -189,3 +195,10 @@ services:
       ZITADEL_COOKIE_SECRET: ${ZITADEL_COOKIE_SECRET:?missed ZITADEL_COOKIE_SECRET env}"
       SERVICE_CLIENT_ID: "charts"
       SERVICE_CLIENT_SECRET: "${CHARTS_SERVICE_CLIENT_SECRET}"
+
+      AUTH_TYPE: "zitadel"
+      KEYCLOAK_CLIENT_ID: "sparrow"
+      KEYCLOAK_URI: "http://frontend-v2.aist.platform/auth"
+      KEYCLOAK_REALM_NAME: "datalens"
+      KEYCLOAK_SECRET_KEY: "IDf5iyN1HHvUXCYo3I3qUnIlyQnm2nmz"
+      KEYCLOAK_COOKIE_SECRET: "pfsjRzyKpw7ZiGMpEYI0xzwhsJfI0Jrf"
