@@ -104,7 +104,12 @@ services:
       SERVICE_CLIENT_ID: "us"
       SERVICE_CLIENT_SECRET: "${US_SERVICE_CLIENT_SECRET}"
 
-      AUTH_TYPE: "zitadel"
+      AUTH_TYPE: "keycloak"
+      KEYCLOAK_CLIENT_ID: "us"
+      KEYCLOAK_URI: "http://frontend-v2.aist.platform/auth"
+      KEYCLOAK_REALM_NAME: "datalens"
+      KEYCLOAK_SECRET_KEY: "MmCw9lSpReuJtZzBvXBgbWT8qHLdgfZw"
+      KEYCLOAK_COOKIE_SECRET: "MmCw9lSpReuJtZzBvXBgbWT8qHLdgfZw"
 
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -196,9 +201,9 @@ services:
       SERVICE_CLIENT_ID: "charts"
       SERVICE_CLIENT_SECRET: "${CHARTS_SERVICE_CLIENT_SECRET}"
 
-      AUTH_TYPE: "zitadel"
-      KEYCLOAK_CLIENT_ID: "sparrow"
+      AUTH_TYPE: "keycloak"
+      KEYCLOAK_CLIENT_ID: "charts"
       KEYCLOAK_URI: "http://frontend-v2.aist.platform/auth"
       KEYCLOAK_REALM_NAME: "datalens"
-      KEYCLOAK_SECRET_KEY: "IDf5iyN1HHvUXCYo3I3qUnIlyQnm2nmz"
+      KEYCLOAK_SECRET_KEY: "qSXzT9omYFeLwwIJ9jzjt8Xdsv634Y96"
       KEYCLOAK_COOKIE_SECRET: "pfsjRzyKpw7ZiGMpEYI0xzwhsJfI0Jrf"
