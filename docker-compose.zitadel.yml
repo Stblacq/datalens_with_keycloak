@@ -11,7 +11,8 @@ services:
 
   control-api:
     container_name: datalens-control-api
-    image: ghcr.io/datalens-tech/datalens-control-api:0.2132.0
+#    image: ghcr.io/datalens-tech/datalens-control-api:0.2132.0
+    image: docker.io/library/datalens-control-api:local
     environment:
       BI_API_UWSGI_WORKERS_COUNT: 4
       CONNECTOR_AVAILABILITY_VISIBLE: "clickhouse,postgres,chyt,ydb,mysql,greenplum,mssql"
@@ -22,19 +23,25 @@ services:
       US_HOST: "http://us:8083"
       US_MASTER_TOKEN: "${US_MASTER_TOKEN}"
 
-      AUTH_TYPE: "ZITADEL"
+      AUTH_TYPE: "KEYCLOAK"
       AUTH_BASE_URL: "http://zitadel:8080"
       AUTH_PROJECT_ID: "${ZITADEL_PROJECT_ID}"
       AUTH_CLIENT_ID: "bi"
       AUTH_CLIENT_SECRET: "${BI_SERVICE_CLIENT_SECRET}"
       AUTH_APP_CLIENT_ID: "${DL_CLIENT_ID}"
       AUTH_APP_CLIENT_SECRET: "${DL_CLIENT_SECRET}"
+
+      AUTH_KEYCLOAK_CLIENT_ID: "bi"
+      AUTH_KEYCLOAK_URI: "http://frontend-v2.aist.platform/auth"
+      AUTH_KEYCLOAK_REALM_NAME: "datalens"
+      AUTH_KEYCLOAK_SECRET_KEY: "CJYEQ0NJQ2MGyhfoCOgr3rswlbwRazXi"
     depends_on:
       - us
 
   data-api:
     container_name: datalens-data-api
-    image: ghcr.io/datalens-tech/datalens-data-api:0.2132.0
+#    image: ghcr.io/datalens-tech/datalens-data-api:0.2132.0
+    image: docker.io/library/datalens-data-api:local
     environment:
       GUNICORN_WORKERS_COUNT: 5
       RQE_FORCE_OFF: 1
@@ -48,13 +55,18 @@ services:
       US_HOST: "http://us:8083"
       US_MASTER_TOKEN: "${US_MASTER_TOKEN}"
 
-      AUTH_TYPE: "ZITADEL"
+      AUTH_TYPE: "KEYCLOAK"
       AUTH_BASE_URL: "http://zitadel:8080"
       AUTH_PROJECT_ID: "${ZITADEL_PROJECT_ID}"
       AUTH_CLIENT_ID: "bi"
       AUTH_CLIENT_SECRET: "${BI_SERVICE_CLIENT_SECRET}"
       AUTH_APP_CLIENT_ID: "${DL_CLIENT_ID}"
       AUTH_APP_CLIENT_SECRET: "${DL_CLIENT_SECRET}"
+
+      AUTH_KEYCLOAK_CLIENT_ID: "bi"
+      AUTH_KEYCLOAK_URI: "http://frontend-v2.aist.platform/auth"
+      AUTH_KEYCLOAK_REALM_NAME: "datalens"
+      AUTH_KEYCLOAK_SECRET_KEY: "CJYEQ0NJQ2MGyhfoCOgr3rswlbwRazXi"
     depends_on:
       - us
       - pg-compeng
@@ -97,7 +109,6 @@ services:
       HC: ${HC:-0}
       NODE_EXTRA_CA_CERTS: /certs/root.crt
 
-      ZITADEL: "true"
       ZITADEL_URI: "http://zitadel:8080"
       CLIENT_ID: "${DL_CLIENT_ID}"
       CLIENT_SECRET: "${DL_CLIENT_SECRET}"
@@ -109,7 +120,6 @@ services:
       KEYCLOAK_URI: "http://frontend-v2.aist.platform/auth"
       KEYCLOAK_REALM_NAME: "datalens"
       KEYCLOAK_SECRET_KEY: "MmCw9lSpReuJtZzBvXBgbWT8qHLdgfZw"
-      KEYCLOAK_COOKIE_SECRET: "MmCw9lSpReuJtZzBvXBgbWT8qHLdgfZw"
 
     extra_hosts:
       - "host.docker.internal:host-gateway"
