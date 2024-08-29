@@ -54,13 +54,22 @@ docker compose up
 
 All your user settings will be stored in the `metadata` folder.
 
-## Parts of the project
 
-DataLens consists of the three main parts:
+## Parts of the Project
 
-- [**UI**](https://github.com/datalens-tech/datalens-ui) is a SPA application with corresponding Node.js part. It provides user interface, proxies requests from users to backend services and also applies some light data postprocessing for charts.
-- [**Backend**](https://github.com/datalens-tech/datalens-backend) is a set of Python applications and libraries. It is responsible for connecting to data sources, generating queries for them and post-processing the data (including formula calculations). The result of this work is an abstract dataset that can be used in UI for charts data request.
+DataLens consists of three main parts:
+
+- [**UI**](https://github.com/datalens-tech/datalens-ui) is a SPA application with a corresponding Node.js component. It provides the user interface, proxies requests from users to backend services, and also applies some light data postprocessing for charts.
+- [**Backend**](https://github.com/datalens-tech/datalens-backend) is a set of Python applications and libraries. It is responsible for connecting to data sources, generating queries for them, and post-processing the data (including formula calculations). The result of this work is an abstract dataset that can be used in the UI for charts data requests.
 - [**UnitedStorage (US)**](https://github.com/datalens-tech/datalens-us) is a Node.js service that uses PostgreSQL to store metadata and configuration of all DataLens objects.
+
+We have also created forks of these three parts that include support for Keycloak:
+
+- [**UI with Keycloak**](https://github.com/Stblacq/datalens-ui_with_keycloak)
+- [**Backend with Keycloak**](https://github.com/Stblacq/datalens-backend_with_keycloak)
+- [**UnitedStorage (US) with Keycloak**](https://github.com/Stblacq/datalens-us_with_keycloak)
+
+These forks have been modified to integrate Keycloak for authentication and authorization, providing enhanced security features.
 
 ## What's already available
 
