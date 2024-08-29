@@ -11,8 +11,7 @@ services:
 
   control-api:
     container_name: datalens-control-api
-#    image: ghcr.io/datalens-tech/datalens-control-api:0.2132.0
-    image: docker.io/library/datalens-control-api:local
+    image: stblacq/datalens-control-api-with-keycloak:latest
     environment:
       BI_API_UWSGI_WORKERS_COUNT: 4
       CONNECTOR_AVAILABILITY_VISIBLE: "clickhouse,postgres,chyt,ydb,mysql,greenplum,mssql"
@@ -34,14 +33,13 @@ services:
       AUTH_KEYCLOAK_CLIENT_ID: "bi"
       AUTH_KEYCLOAK_URI: "http://frontend-v2.aist.platform/auth"
       AUTH_KEYCLOAK_REALM_NAME: "datalens"
-      AUTH_KEYCLOAK_SECRET_KEY: "CJYEQ0NJQ2MGyhfoCOgr3rswlbwRazXi"
+      AUTH_KEYCLOAK_SECRET_KEY: "${KEYCLOAK_BI_SECRET_KEY}"
     depends_on:
       - us
 
   data-api:
     container_name: datalens-data-api
-#    image: ghcr.io/datalens-tech/datalens-data-api:0.2132.0
-    image: docker.io/library/datalens-data-api:local
+    image: stblacq/datalens-data-api-with-keycloak:latest
     environment:
       GUNICORN_WORKERS_COUNT: 5
       RQE_FORCE_OFF: 1
@@ -55,7 +53,7 @@ services:
       US_HOST: "http://us:8083"
       US_MASTER_TOKEN: "${US_MASTER_TOKEN}"
 
-      AUTH_TYPE: "KEYCLOAK"
+      AUTH_TYPE: "${AUTH_TYPE}"
       AUTH_BASE_URL: "http://zitadel:8080"
       AUTH_PROJECT_ID: "${ZITADEL_PROJECT_ID}"
       AUTH_CLIENT_ID: "bi"
@@ -64,9 +62,9 @@ services:
       AUTH_APP_CLIENT_SECRET: "${DL_CLIENT_SECRET}"
 
       AUTH_KEYCLOAK_CLIENT_ID: "bi"
-      AUTH_KEYCLOAK_URI: "http://frontend-v2.aist.platform/auth"
-      AUTH_KEYCLOAK_REALM_NAME: "datalens"
-      AUTH_KEYCLOAK_SECRET_KEY: "CJYEQ0NJQ2MGyhfoCOgr3rswlbwRazXi"
+      AUTH_KEYCLOAK_URI:  "${KEYCLOAK_URI}"
+      AUTH_KEYCLOAK_REALM_NAME: "${KEYCLOAK_REALM_NAME}"
+      AUTH_KEYCLOAK_SECRET_KEY: "${KEYCLOAK_BI_SECRET_KEY}"
     depends_on:
       - us
       - pg-compeng
@@ -94,9 +92,7 @@ services:
 
   us:
     container_name: datalens-us
-    build:
-      context: ./datalens-us
-      dockerfile: Dockerfile
+    image: stblacq/datalensus-with-keycloak:latest
     depends_on:
       - pg-us
     environment:
@@ -115,11 +111,11 @@ services:
       SERVICE_CLIENT_ID: "us"
       SERVICE_CLIENT_SECRET: "${US_SERVICE_CLIENT_SECRET}"
 
-      AUTH_TYPE: "keycloak"
+      AUTH_TYPE: "${AUTH_TYPE}"
       KEYCLOAK_CLIENT_ID: "us"
-      KEYCLOAK_URI: "http://frontend-v2.aist.platform/auth"
-      KEYCLOAK_REALM_NAME: "datalens"
-      KEYCLOAK_SECRET_KEY: "MmCw9lSpReuJtZzBvXBgbWT8qHLdgfZw"
+      KEYCLOAK_URI: "${KEYCLOAK_URI}"
+      KEYCLOAK_REALM_NAME: "${KEYCLOAK_REALM_NAME}"
+      KEYCLOAK_SECRET_KEY: "${KEYCLOAK_US_SECRET_KEY}"
 
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -180,9 +176,7 @@ services:
 
   datalens:
     container_name: datalens-ui
-    build:
-      context: ./aist_datalens_ui
-      dockerfile: Dockerfile
+    image: stblacq/datalensui-with-keycloak:latest
     ports:
       - ${UI_PORT:-8080}:8080
     depends_on:
@@ -211,9 +205,9 @@ services:
       SERVICE_CLIENT_ID: "charts"
       SERVICE_CLIENT_SECRET: "${CHARTS_SERVICE_CLIENT_SECRET}"
 
-      AUTH_TYPE: "keycloak"
+      AUTH_TYPE:  "${AUTH_TYPE}"
       KEYCLOAK_CLIENT_ID: "charts"
-      KEYCLOAK_URI: "http://frontend-v2.aist.platform/auth"
-      KEYCLOAK_REALM_NAME: "datalens"
-      KEYCLOAK_SECRET_KEY: "qSXzT9omYFeLwwIJ9jzjt8Xdsv634Y96"
-      KEYCLOAK_COOKIE_SECRET: "pfsjRzyKpw7ZiGMpEYI0xzwhsJfI0Jrf"
+      KEYCLOAK_URI: "${KEYCLOAK_URI}"
+      KEYCLOAK_REALM_NAME:  "${KEYCLOAK_REALM_NAME}"
+      KEYCLOAK_SECRET_KEY:  "${KEYCLOAK_CHARTS_SECRET_KEY}"
+      KEYCLOAK_COOKIE_SECRET:  "${KEYCLOAK_COOKIE_SECRET}"
