@@ -165,3 +165,57 @@ Summary:
 * CPU - 2 CORES
 
 This is minimal basic system requirements for OpenSource DataLens installation. Аctual consumption of VM resources depends on the complexity of requests to connections, connections types, the number of users and processing speed at the source level
+
+
+---
+
+## Keycloak Support
+
+This fork introduces support for Keycloak, allowing you to leverage Keycloak for authentication and authorization within the application.
+
+### Setup Instructions
+
+1. **Initialize the Application:**
+   - Run the `init.sh` script to set up the necessary environment as described in the instructions above.
+
+2. **Keycloak Server Configuration:**
+   - Set up your Keycloak server with a globally accessible URL (e.g., `http://my-keycloak.server`).
+   - Create a new realm, for example, `datalens`.
+
+3. **Realm Roles:**
+   - Within the `datalens` realm, create the following roles:
+     - `datalens.admin`
+     - `datalens.editor`
+
+4. **User Setup:**
+   - Create a user account for logging in and using the application.
+   - Assign this user the `datalens.admin` role.
+
+5. **Client Configuration:**
+   - Create three clients within the `datalens` realm:
+     - `bi`
+     - `charts`
+     - `us`
+   - For each client, navigate to the service account users and assign them the `datalens.editor` role.
+
+6. **Environment Configuration:**
+   - Update the `.env` file with the following settings:
+
+     ```env
+     AUTH_TYPE=KEYCLOAK
+     KEYCLOAK_URI=http://my-keycloak.server/auth
+     KEYCLOAK_REALM_NAME=datalens
+     KEYCLOAK_CHARTS_SECRET_KEY=xxxxxxxxxxxx
+     KEYCLOAK_US_SECRET_KEY=xxxxxxxxxxxxxxxxxxxxxxxx
+     KEYCLOAK_BI_SECRET_KEY=xxxxxxxxxxxxxxxxxxxxx
+     KEYCLOAK_COOKIE_SECRET=xxxxxxxxxxxxxxxxxxxxxx
+     ```
+
+7. **Running the Application:**
+   - Once the configuration is complete, you can run the application using the following command:
+
+     ```bash
+     HC=1 docker compose -f docker-compose.zitadel.yml up
+     ```
+
+---
